@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { ChevronDownIcon } from "lucide-react";
-import { ComponentProps, ElementType, useState } from "react";
+import { ComponentProps, ElementType, useState, useEffect } from "react";
 import { CollapsibleTrigger } from "@radix-ui/react-collapsible";
 import { Collapsible, CollapsibleContent } from "./ui/collapsible";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
@@ -18,7 +18,7 @@ export type ModuleItem = {
 };
 
 export type ModuleListProps = ComponentProps<"ul"> & {
-  collapside: boolean;
+  collapside?: boolean;
   items: ModuleItem[];
 };
 
@@ -30,6 +30,23 @@ export const ModuleList = ({
 }: ModuleListProps) => {
   const pathname = usePathname();
   const [openModules, setOpenModules] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    const initialOpenModules = new Set<string>();
+    items.forEach((module) => {
+      if (module.subModules) {
+        module.subModules.forEach((subModule) => {
+          if (subModule.href === pathname) {
+            initialOpenModules.add(module.id);
+          }
+        });
+      }
+      if (module.href === pathname) {
+        initialOpenModules.add(module.id);
+      }
+    });
+    setOpenModules(initialOpenModules);
+  }, [pathname, items]);
 
   const toggleModule = (id: string) => {
     setOpenModules((prevOpenModules) => {
@@ -50,7 +67,7 @@ export const ModuleList = ({
       <div className="flex w-full items-center">
         <div className="flex items-center gap-1.5">
           {module.icon && <module.icon className="module-icon" size={25} />}
-          <span className="line-clamp-1 w-full overflow-hidden text-ellipsis text-[14px] leading-7 tracking-wide">
+          <span className="line-clamp-1 w-full overflow-hidden text-ellipsis text-left text-[14px] leading-7 tracking-wide">
             {module.label}
           </span>
         </div>
@@ -66,7 +83,7 @@ export const ModuleList = ({
   };
 
   return (
-    <div>
+    <div className="h-full w-full">
       <ul {...props} className={cn("flex flex-col gap-1.5", className)}>
         {items.map((module) => {
           const collapsedItem = module.subModules && openModules.has(module.id);
@@ -99,7 +116,7 @@ export const ModuleList = ({
                             data-collapside={collapsedItem}
                             className="sub-module-list relative"
                           >
-                            <div className="absolute left-6 h-full w-1 border-l border-solid border-slate-500/50" />
+                            <div className="absolute left-6 h-full w-1 border-l border-solid border-slate-500/20" />
                             {module.subModules.map((subModule) => (
                               <Tooltip key={subModule.id}>
                                 <TooltipTrigger>
