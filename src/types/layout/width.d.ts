@@ -1,1 +1,1 @@
-export type Width = "sm" | "md" | "lg" | "full";
+export type Width = "sm" | "md" | "lg" | "full" | "xl";
