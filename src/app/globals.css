@@ -67,3 +67,21 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .module {
+    @apply flex h-11 w-full cursor-pointer items-center gap-2 rounded-t-md border-b border-solid border-slate-500/50 !px-4 !py-3 font-medium transition-all hover:bg-slate-500/10 hover:text-blue-500 data-[active=true]:rounded-md data-[active=true]:bg-blue-600 data-[active=true]:text-white data-[active=true]:hover:bg-blue-500;
+  }
+
+  .sub-module {
+    @apply ml-6 overflow-hidden pl-2;
+  }
+
+  .module-icon {
+    @apply hover:text-blue-500;
+  }
+
+  .sub-module-list {
+    @apply grid h-0 cursor-none grid-rows-[0fr] flex-col gap-0.5 overflow-hidden pt-2 opacity-0 transition-all duration-300 ease-in-out data-[collapside=true]:h-auto data-[collapside=true]:grid-rows-[1fr] data-[collapside=true]:opacity-100;
+  }
+}
